@@ -25,4 +25,9 @@ public class SchoolController {
             throw new Error(e);
         }
     }
+
+    @GetMapping()
+    public ResponseEntity<SchoolEntity> getSchool(){
+        return
+    }
 }

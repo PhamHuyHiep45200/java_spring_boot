@@ -26,6 +26,8 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
     SchoolRepository schoolRepository;
 
 //    get user list and search
@@ -51,8 +53,7 @@ public class UserController {
             UserEntity user = new UserEntity();
             user.setEmail(userDto.getEmail());
             user.setUsername(userDto.getUsername());
-            log.info("check: {}",userDto);
-            SchoolEntity schoolById = schoolRepository.findById(userDto.getSchool()).orElse(null);
+            SchoolEntity schoolById = schoolRepository.findById(userDto.getSchool()).orElseThrow();
             user.setSchool(schoolById);
             userRepository.save(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
