@@ -13,13 +13,12 @@ public class SchoolEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "school_id")
-    private Long schoolId;
+    private Long id;
 
     @NotNull
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "school")
     private List<UserEntity> users;
 }
