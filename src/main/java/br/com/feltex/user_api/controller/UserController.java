@@ -1,11 +1,11 @@
 package br.com.feltex.user_api.controller;
 
 import br.com.feltex.user_api.dto.user.UpdateMultiDto;
-import br.com.feltex.user_api.entity.SchoolEntity;
+import br.com.feltex.user_api.entity.SchoolsEntity;
 import br.com.feltex.user_api.repository.SchoolRepository;
 import br.com.feltex.user_api.utils.UserUtil;
 import br.com.feltex.user_api.dto.user.UserDto;
-import br.com.feltex.user_api.entity.UserEntity;
+import br.com.feltex.user_api.entity.UsersEntity;
 import br.com.feltex.user_api.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -32,8 +32,7 @@ public class UserController {
 
 //    get user list and search
     @GetMapping("")
-    @PreAuthorize("permitAll()")
-    public List<UserEntity> getUser(
+    public List<UsersEntity> getUser(
             @RequestParam(required = false, defaultValue = "") String email,
             @RequestParam(required = false, defaultValue = "") String username
     ) {
@@ -42,7 +41,7 @@ public class UserController {
 
 //    get user by id
     @GetMapping("/{id}")
-    public Optional<UserEntity> getUserById(@PathVariable Long id) {
+    public Optional<UsersEntity> getUserById(@PathVariable Long id) {
         return userRepository.findById(id);
     }
 
@@ -50,10 +49,10 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity postUser(@RequestBody UserDto userDto) {
         try {
-            UserEntity user = new UserEntity();
+            UsersEntity user = new UsersEntity();
             user.setEmail(userDto.getEmail());
             user.setUsername(userDto.getUsername());
-            SchoolEntity schoolById = schoolRepository.findById(userDto.getSchool()).orElseThrow();
+            SchoolsEntity schoolById = schoolRepository.findById(userDto.getSchool()).orElseThrow();
             user.setSchool(schoolById);
             userRepository.save(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -64,17 +63,17 @@ public class UserController {
 
     //   update user
     @PatchMapping("/{id}")
-    public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserDto dto) {
+    public ResponseEntity<UsersEntity> updateUser(@PathVariable Long id, @RequestBody UserDto dto) {
         if(!userRepository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        UserEntity userUpdate = userRepository.getById(id);
+        UsersEntity userUpdate = userRepository.getById(id);
 
         log.info("check log {}", dto);
         BeanUtils.copyProperties(dto, userUpdate, UserUtil.getNullPropertyNames(dto));
 
         log.info("user updated {}", userUpdate);
-        UserEntity userSave = userRepository.save(userUpdate);
+        UsersEntity userSave = userRepository.save(userUpdate);
         return new ResponseEntity<>(userSave, HttpStatus.OK);
     }
 
@@ -90,7 +89,7 @@ public class UserController {
 
     //    create multiple user
     @PostMapping("/multiple")
-    public ResponseEntity postMultiUser(@RequestBody UserEntity[] listUser) {
+    public ResponseEntity postMultiUser(@RequestBody UsersEntity[] listUser) {
         try {
             userRepository.saveAll(Arrays.asList(listUser));
             return new ResponseEntity<>(HttpStatus.OK);
@@ -103,8 +102,8 @@ public class UserController {
     @PatchMapping("/multiple")
     public ResponseEntity patchMultiUser(@RequestBody UpdateMultiDto updateMultiDto) {
         try {
-            List<UserEntity> users = userRepository.findAllById(updateMultiDto.getIds());
-            for (UserEntity user: users) {
+            List<UsersEntity> users = userRepository.findAllById(updateMultiDto.getIds());
+            for (UsersEntity user: users) {
                 user.setUsername(updateMultiDto.getUsername());
             }
             userRepository.saveAll(users);

@@ -1,11 +1,9 @@
 package br.com.feltex.user_api.utils;
 
 import br.com.feltex.user_api.dto.auth.AuthDto;
-import br.com.feltex.user_api.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 

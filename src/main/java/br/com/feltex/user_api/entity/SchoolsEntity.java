@@ -1,5 +1,6 @@
 package br.com.feltex.user_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -9,16 +10,18 @@ import java.util.List;
 
 @Entity
 @Data
-public class SchoolEntity {
+@Table(name = "schools")
+public class SchoolsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long schoolId;
 
     @NotNull
     @NotBlank
     private String name;
 
     @OneToMany(mappedBy = "school")
-    private List<UserEntity> users;
+    @JsonIgnore
+    private List<UsersEntity> users;
 }
